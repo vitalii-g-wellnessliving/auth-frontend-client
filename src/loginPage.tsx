@@ -4,6 +4,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signIn, signUp } from './authService';
+import { config } from './config';
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +13,9 @@ const LoginPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
+
+  const authUrl = `${config.authUrl}/oauth2/authorize?client_id=${config.clientId}&response_type=token&scope=email+openid+phone&redirect_uri=${window.location.origin}/auth-callback`;
+  console.log('authUrl', authUrl);
 
   const handleSignIn = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -88,6 +93,9 @@ const LoginPage = () => {
         )}
         <button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
       </form>
+      <div>
+        <button onClick={() => window.open(authUrl, "_self")}>Oauth2 Sign In</button>
+      </div>
       <button onClick={() => setIsSignUp(!isSignUp)}>
         {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
       </button>
